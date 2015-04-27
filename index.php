@@ -28,14 +28,14 @@ for ($page = 1; $page < $last_page; $page++) { //делаем цикл прох�
 }
 
 
-function get_page_contents($url) { //функция запрашивает и возвращает страницу с параметром номера страницы
+function get_page_contents($url) { //функция запрашивает страницу с параметром номера страницы
 	$ch = curl_init();
     curl_setopt($ch,CURLOPT_URL,$url);
     curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
     curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 5);
     $result = curl_exec($ch);
     curl_close($ch);
-    return $result;
+    return $result; //и возвращает
 }
 
 function get_download_url($dom) {
