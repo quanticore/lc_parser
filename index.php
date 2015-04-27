@@ -9,26 +9,26 @@ libxml_use_internal_errors(true);
 $links = array();
 $dates = array();
 
-$last_page = 5;
-for ($page = 1; $page < $last_page; $page++) {
+$last_page = 5; //номер последней страницы
+for ($page = 1; $page < $last_page; $page++) { //делаем цикл прохода по всем страницам до последней
 
 	$dom->loadHTML(get_page_contents('http://freake.ru/music/style/drum-bass?p='.$page));
 	
 	$xpath = new DomXPath($dom);
 	
-	$links = get_download_url($dom);
-	$dates = get_posts_date($xpath);
+	$links = get_download_url($dom); //запрос в функцию, ответом будет массив ссылок скачивания для одной страницы
+	$dates = get_posts_date($xpath); //запрос в функцию, ответом будет массив дат для одной страницы
 	
-	for ($i = 0; $i < count($links); $i++) {
-		echo $links[$i].' - '.$dates[$i].'<br>';
+	for ($i = 0; $i < count($links); $i++) { //проходимся циклом по одному из массивов
+		echo $links[$i].' - '.$dates[$i].'<br>'; //выводим на экран собранные массивы ссылок и дат для одной страницы
 	}
-	$links = null;
-	$dates = null;
+	$links = null; //очищаем массив, получается что каждый цикл
+	$dates = null; //возможно очищение лишнее, проверим потом
 	
 }
 
 
-function get_page_contents($url) {
+function get_page_contents($url) { //функция запрашивает и возвращает страницу с параметром номера страницы
 	$ch = curl_init();
     curl_setopt($ch,CURLOPT_URL,$url);
     curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
@@ -46,7 +46,8 @@ function get_download_url($dom) {
 		$name = $as->getAttribute('href');
 		$fname = ltrim($name, '/');
 
-		$url = 'http://freake.ru/engine/modules/ajax/music.link.php';
+		
+		$url = 'http://freake.ru/engine/modules/ajax/music.link.php'; //отсюда и ниже формируем POST запрос
 		$data = array('id' => $fname);
 		
 		$options = array(
@@ -56,24 +57,26 @@ function get_download_url($dom) {
 		        'content' => http_build_query($data),
 		    ),
 		);
+
 		$context  = stream_context_create($options);
-		$result = stripslashes(htmlspecialchars(file_get_contents($url, false, $context)));
+		$result = stripslashes(htmlspecialchars(file_get_contents($url, false, $context))); //отсылаем и получаем ответ на POST запрос
 		
-		$string = substr($result, stripos($result, '&lt;a href=&quot;')+strlen('&lt;a href=&quot;'));
-		$linki[] = current(explode('&quot; target=', $string));
+
+		$string = substr($result, stripos($result, '&lt;a href=&quot;')+strlen('&lt;a href=&quot;')); //удаляем контент до первой ссылки - символы записаны в HTML Entity кодах 
+		$linki[] = current(explode('&quot; target=', $string)); //удаляем контент после ссылки, символы записаны так же и добавляем в массив по циклу
 	}
-	return $linki;
+	return $linki; //функция возвращает заполненный массив
 }
 
 function get_posts_date($xpath) {
 	$datos = $xpath->query("//*[contains(@class, 'post-info')]");
 	foreach ($datos as $dato) {
 
-		$quarterfinaldate = $dato->getElementsByTagName('span')->item(0)->nodeValue;
-		if (strpos($quarterfinaldate,':') !== false)
-			$semifinaldate = (mb_substr($quarterfinaldate, 0, -8, "utf-8"));
+		$quarterfinaldate = $dato->getElementsByTagName('span')->item(0)->nodeValue; //достаем дату-время из поста
+		if (strpos($quarterfinaldate,':') !== false) //проверяем, указано ли время - если нет, то указан год
+			$semifinaldate = (mb_substr($quarterfinaldate, 0, -8, "utf-8")); //удаляем символы в дате со временем, дата без года
 		else
-			$semifinaldate = $quarterfinaldate;
+			$semifinaldate = $quarterfinaldate; //эта дата с годом
 
 		$trans = array("янв" => "Jan",
 						"фев" => "Feb",
@@ -86,33 +89,33 @@ function get_posts_date($xpath) {
 						"сен" => "Sep",
 						"окт" => "Oct",
 						"ноя" => "Nov",
-						"дек" => "Dec");
+						"дек" => "Dec"); //подготавливаем массив для замен месяцев
 
-		$finaldate = strtr($semifinaldate, $trans);
+		$finaldate = strtr($semifinaldate, $trans); //переписываем русские месяцы на Англ.
 
 		date_default_timezone_set('Europe/Moscow');
 		$date = new DateTime();
 
-		switch ($finaldate) {
+		switch ($finaldate) { //делаем обработку вариантов даты
 			case 'Сегодня':
-				$tempdate = date('W Y', strtotime("today"));
+				$tempdate = date('W Y', strtotime("today")); //если Сегодня
 				break;
 			case 'Вчера':
-				$tempdate = date('W Y', strtotime("yesterday"));
+				$tempdate = date('W Y', strtotime("yesterday")); //если Вчера
 				break;
 			default:
 				if (mb_strlen($finaldate, "utf-8") == 6) {
-					$date = date_create_from_format('d M', $finaldate);
-					$tempdate = date_format($date, 'W Y');
+					$date = date_create_from_format('d M', $finaldate); //если без года и удаленным временем
+					$tempdate = date_format($date, 'W Y'); //сохраняем в переменную
 				}
 				else
-					$date = date_create_from_format('d M Y', $finaldate);
+					$date = date_create_from_format('d M Y', $finaldate); //если с годом
 					$tempdate = date_format($date, 'W Y');
 				
 		}
-		$datki[] = $tempdate;
+		$datki[] = $tempdate; //добавляем в массив по циклу
 	}	
-	return $datki;
+	return $datki; //функция возвращает заполненный массив
 }
 
 ?>
