@@ -10,8 +10,8 @@ $links = array();
 $dates = array();
 //test
 //test2
-$last_page = 5; //номер последней страницы
-for ($page = 1; $page <= $last_page; $page++) { //делаем цикл прохода по всем страницам до последней
+$last_page = 2; //номер последней страницы
+for ($page = 1; $page < $last_page; $page++) { //делаем цикл прохода по всем страницам до последней
 
 	$dom->loadHTML(get_page_contents('http://freake.ru/music/style/drum-bass?p='.$page));
 	
