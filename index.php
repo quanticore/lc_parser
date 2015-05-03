@@ -83,7 +83,7 @@ function get_posts_date($xpath) {
 						"фев" => "Feb",
 						"мар" => "Mar",
 						"апр" => "Apr",
-						"май" => "May",
+						"мая" => "May",
 						"июн" => "Jun",
 						"июл" => "Jul",
 						"авг" => "Aug",
