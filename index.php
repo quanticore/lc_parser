@@ -8,7 +8,8 @@ libxml_use_internal_errors(true);
 
 $links = array();
 $dates = array();
-
+//test
+//test2
 $last_page = 5; //номер последней страницы
 for ($page = 1; $page < $last_page; $page++) { //делаем цикл прохода по всем страницам до последней
 
