@@ -10,7 +10,9 @@ $links = array();
 $dates = array();
 //test
 //test2
-$last_page = 3; //номер последней страницы
+$last_page = 1; //номер последней страницы
+echo '[Links]'.'<br>';
+$k = 0;
 for ($page = 1; $page <= $last_page; $page++) { //делаем цикл прохода по всем страницам до последней
 
 	$dom->loadHTML(get_page_contents('http://freake.ru/music/style/drum-bass?p='.$page));
@@ -22,7 +24,9 @@ for ($page = 1; $page <= $last_page; $page++) { //делаем цикл прох
 	
 	for ($i = 0; $i < count($links); $i++) { //проходимся циклом по одному из массивов
 		if (strlen($links[$i]) < 30)
-		    echo $links[$i].' - '.$dates[$i].'<br>'; //выводим на экран собранные массивы ссылок и дат для одной страницы
+		    echo 'item'.$k.'='.$links[$i].'<br>';
+			echo 'item'.$k.'_SaveTo=I:\temp\USD\\'.$dates[$i].'<br>'; //выводим на экран собранные массивы ссылок и дат для одной страницы
+			$k++;
 	}
 	$links = null; //очищаем массив, получается что каждый цикл
 	$dates = null; //возможно очищение лишнее, проверим потом
@@ -100,19 +104,19 @@ function get_posts_date($xpath) {
 
 		switch ($finaldate) { //делаем обработку вариантов даты
 			case 'Сегодня':
-				$tempdate = date('W Y', strtotime("today")); //если Сегодня
+				$tempdate = date('yW', strtotime("today")); //если Сегодня
 				break;
 			case 'Вчера':
-				$tempdate = date('W Y', strtotime("yesterday")); //если Вчера
+				$tempdate = date('yW', strtotime("yesterday")); //если Вчера
 				break;
 			default:
 				if (mb_strlen($finaldate, "utf-8") == 6) {
 					$date = date_create_from_format('d M', $finaldate); //если без года и удаленным временем
-					$tempdate = date_format($date, 'W Y'); //сохраняем в переменную
+					$tempdate = date_format($date, 'yW'); //сохраняем в переменную
 				}
 				else
 					$date = date_create_from_format('d M Y', $finaldate); //если с годом
-					$tempdate = date_format($date, 'W Y');
+					$tempdate = date_format($date, 'yW');
 				
 		}
 		$datki[] = $tempdate; //добавляем в массив по циклу
