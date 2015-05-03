@@ -1,7 +1,7 @@
 <?php 
 
 //header('Content-type: text/plain; charset=UTF-8');
-
+//omg
 $dom = new DOMDocument();
 
 libxml_use_internal_errors(true);
