@@ -10,7 +10,7 @@ $links = array();
 $dates = array();
 //test
 //test2
-$last_page = 5; //номер последней страницы
+$last_page = 3; //номер последней страницы
 for ($page = 1; $page <= $last_page; $page++) { //делаем цикл прохода по всем страницам до последней
 
 	$dom->loadHTML(get_page_contents('http://freake.ru/music/style/drum-bass?p='.$page));
@@ -21,7 +21,7 @@ for ($page = 1; $page <= $last_page; $page++) { //делаем цикл прох
 	$dates = get_posts_date($xpath); //запрос в функцию, ответом будет массив дат для одной страницы
 	
 	for ($i = 0; $i < count($links); $i++) { //проходимся циклом по одному из массивов
-		if (strlen($links[$i]) > 30)
+		if (strlen($links[$i]) < 30)
 		    echo $links[$i].' - '.$dates[$i].'<br>'; //выводим на экран собранные массивы ссылок и дат для одной страницы
 	}
 	$links = null; //очищаем массив, получается что каждый цикл
