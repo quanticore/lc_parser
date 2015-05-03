@@ -10,7 +10,7 @@ $links = array();
 $dates = array();
 //test
 //test2
-$last_page = 1; //номер последней страницы
+$last_page = 6; //номер последней страницы
 echo '[Links]'.'<br>';
 $k = 0;
 for ($page = 1; $page <= $last_page; $page++) { //делаем цикл прохода по всем страницам до последней
@@ -23,10 +23,11 @@ for ($page = 1; $page <= $last_page; $page++) { //делаем цикл прох
 	$dates = get_posts_date($xpath); //запрос в функцию, ответом будет массив дат для одной страницы
 	
 	for ($i = 0; $i < count($links); $i++) { //проходимся циклом по одному из массивов
-		if (strlen($links[$i]) < 30)
+		if (strlen($links[$i]) < 30){
 		    echo 'item'.$k.'='.$links[$i].'<br>';
 			echo 'item'.$k.'_SaveTo=I:\temp\USD\\'.$dates[$i].'<br>'; //выводим на экран собранные массивы ссылок и дат для одной страницы
 			$k++;
+		}
 	}
 	$links = null; //очищаем массив, получается что каждый цикл
 	$dates = null; //возможно очищение лишнее, проверим потом
